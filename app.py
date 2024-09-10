@@ -41,8 +41,7 @@ def api_data():
         if not records:
             return jsonify({"message": "No records found for the given userId"}), 404
         print("api response is : ",records)
-
-        return jsonify(json.loads(records))
+        return jsonify(records)
     except mysql.connector.Error as err:
         return jsonify({"error": str(err)}), 500
 
