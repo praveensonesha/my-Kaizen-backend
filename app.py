@@ -2,9 +2,11 @@ from flask import Flask, jsonify, request
 import mysql.connector
 import os
 from dotenv import load_dotenv
+from flask_cors import CORS     #cors 
 import json
 
 app = Flask(__name__)
+CORS(app)  # This will allow all domains by default
 
 load_dotenv()
 # MySQL Connection Function
