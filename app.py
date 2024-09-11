@@ -30,8 +30,8 @@ def get_reports():
         return jsonify({"error": "No JSON data provided or userId missing"}), 400
 
     user_id = data['userId']
+    print("user_id:", user_id)
 
-    print("user_id : ",user_id)
     try:
         connection = get_mysql_connection()
         cursor = connection.cursor(dictionary=True)  # Use dictionary cursor to get results as dict
@@ -42,8 +42,20 @@ def get_reports():
         connection.close()
         if not records:
             return jsonify({"message": "No records found for the given userId"}), 404
-        print("api response is : ",records)
-        return jsonify(records)
+        
+        # Clean up the data
+        cleaned_records = []
+        for record in records:
+            # Assuming reportDetails is stored as a JSON string in the database
+            try:
+                report_details = json.loads(record['reportDetails'])
+                cleaned_records.append(report_details)
+            except json.JSONDecodeError:
+                # Handle the case where JSON decoding fails
+                return jsonify({"error": "Error decoding JSON data from the database"}), 500
+        
+        print("api response is:", cleaned_records)
+        return jsonify(cleaned_records)
     except mysql.connector.Error as err:
         return jsonify({"error": str(err)}), 500
 
@@ -54,8 +66,8 @@ def get_summarized_report():
         return jsonify({"error": "No JSON data provided or userId missing"}), 400
 
     user_id = data['userId']
+    print("user_id:", user_id)
 
-    print("user_id : ",user_id)
     try:
         connection = get_mysql_connection()
         cursor = connection.cursor(dictionary=True)  # Use dictionary cursor to get results as dict
@@ -66,8 +78,20 @@ def get_summarized_report():
         connection.close()
         if not records:
             return jsonify({"message": "No records found for the given userId"}), 404
-        print("api response is : ",records)
-        return jsonify(records)
+        
+        # Clean up the data
+        cleaned_records = []
+        for record in records:
+            # Assuming summarizedData is stored as a JSON string in the database
+            try:
+                summarized_data = json.loads(record['summarizedData'])
+                cleaned_records.append(summarized_data)
+            except json.JSONDecodeError:
+                # Handle the case where JSON decoding fails
+                return jsonify({"error": "Error decoding JSON data from the database"}), 500
+        
+        print("api response is:", cleaned_records)
+        return jsonify(cleaned_records)
     except mysql.connector.Error as err:
         return jsonify({"error": str(err)}), 500
 
